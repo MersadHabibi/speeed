@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .street-line-animation {
+    animation-name: street-line-animation;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+  @keyframes street-line-animation {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(80%);
+    }
+  }
+
+  /*  */
+
+  .other-car {
+    animation-name: other-car-animation;
+    /* animation-iteration-count: infinite; */
+    /* visibility: hidden; */
+    transform: translateY(120%);
+    animation-timing-function: linear;
+  }
+
+  @keyframes other-car-animation {
+    from {
+      transform: translateY(-20%);
+    }
+    to {
+      transform: translateY(120%);
+    }
+  }
+}
