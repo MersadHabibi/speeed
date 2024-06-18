@@ -15,7 +15,7 @@ export type Actions = {
 
 export const useMainStore = create<State & Actions>()((set) => ({
   gameStatus: GameStatusEnum.Started,
-  speed: 1000,
+  speed: 20,
   traffic: 1000,
   setGameStatus(gameStatus) {
     set({ gameStatus: gameStatus });

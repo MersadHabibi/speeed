@@ -94,11 +94,11 @@ export default function MyCar() {
           return;
         }
 
-        if (startTouchXPosition < clientX - 100) {
+        if (startTouchXPosition < clientX - 50) {
           changeCarLineHandler("right");
 
           setStartTouchXPosition(clientX);
-        } else if (startTouchXPosition > clientX + 100) {
+        } else if (startTouchXPosition > clientX + 50) {
           changeCarLineHandler("left");
 
           setStartTouchXPosition(clientX);
@@ -160,16 +160,18 @@ export default function MyCar() {
         }
       };
 
-      if (myCar.YPosition < 5 || myCar.YPosition > 85) {
-        clearInterval(interval);
-        setIsMovingY("stop");
-        setCarYPosition(
-          myCar.YPosition < 5 ? myCar.YPosition + 1 : myCar.YPosition - 1,
-        );
-      } else if (isMovingY !== "stop") {
-        interval = setInterval(() => {
-          moveCarHandler(isMovingY);
-        }, 30);
+      if (isMovingY !== "stop") {
+        if (myCar.YPosition < 5 || myCar.YPosition > 85) {
+          clearInterval(interval);
+          setIsMovingY("stop");
+          setCarYPosition(
+            myCar.YPosition < 5 ? myCar.YPosition + 1 : myCar.YPosition - 1,
+          );
+        } else {
+          interval = setInterval(() => {
+            moveCarHandler(isMovingY);
+          }, 30);
+        }
       }
 
       // Mobile
@@ -181,16 +183,24 @@ export default function MyCar() {
       const onTouchMove = (event: TouchEvent) => {
         let clientY = event.changedTouches[0].clientY;
 
-        if (!startTouchYPosition) {
+        if (
+          !startTouchYPosition ||
+          myCar.YPosition < 5 ||
+          myCar.YPosition > 85
+        ) {
+          setCarYPosition(
+            myCar.YPosition < 5 ? myCar.YPosition + 1 : myCar.YPosition - 1,
+          );
+
           return;
         }
 
         if (startTouchYPosition > clientY) {
-          moveCarHandler("front", 0.35);
+          moveCarHandler("front", (startTouchYPosition - clientY) / 7);
 
           setStartTouchYPosition(clientY);
         } else if (startTouchYPosition < clientY) {
-          moveCarHandler("back", 0.35);
+          moveCarHandler("back", (clientY - startTouchYPosition) / 7);
 
           setStartTouchYPosition(clientY);
         }
