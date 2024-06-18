@@ -3,187 +3,303 @@
 import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { useOtherCarsStore } from "./otherCarsStore";
-import { TCarPosition, TPosition } from "@/types";
+import { TCarLine, TPosition } from "@/types";
+import { useMainStore } from "@/stores/mainStore";
+import { GameStatusEnum } from "@/enums";
+import { useMyCarStore } from "./myCarStore";
 
-type TMovingY = "back" | "front" | undefined;
+type TMovingY = "back" | "front" | "stop";
 
 export default function MyCar() {
   const myCarRef = useRef(null);
-  const [carPosition, setCarPosition] = useState<TCarPosition>("center");
-  const [carYPosition, setCarYPosition] = useState(85);
 
-  const [isMovingY, setIsMovingY] = useState<TMovingY>();
-
-  const otherCarsPositions = useOtherCarsStore(
-    (state) => state.otherCarsPositions,
+  const [isMovingY, setIsMovingY] = useState<TMovingY>("stop");
+  const [startTouchXPosition, setStartTouchXPosition] = useState<number | null>(
+    null,
   );
-  const setOtherCarsPositions = useOtherCarsStore(
-    (state) => state.setOtherCarsPositions,
+  const [startTouchYPosition, setStartTouchYPosition] = useState<number | null>(
+    null,
   );
 
-  // On move car position
+  const otherCars = useOtherCarsStore((state) => state.otherCars);
+  const setOtherCars = useOtherCarsStore((state) => state.setOtherCars);
+
+  const setGameStatus = useMainStore((state) => state.setGameStatus);
+  const gameStatus = useMainStore((state) => state.gameStatus);
+
+  const myCar = useMyCarStore((state) => state.myCar);
+  const setMyCar = useMyCarStore((state) => state.setMyCar);
+  const setCarLine = useMyCarStore((state) => state.setCarLine);
+  const setCarYPosition = useMyCarStore((state) => state.setCarYPosition);
+
+  // On change car Line
   useEffect(() => {
-    const onMoveCarPosition = (event: KeyboardEvent) => {
-      // On move to left
-      if (event.key === "a" || event.key === "A" || event.key === "ArrowLeft") {
-        setCarPosition(
-          carPosition === "right"
-            ? "center"
-            : carPosition === "center"
-              ? "left"
-              : "left",
-        );
-      }
-      // On move to right
-      else if (
-        event.key === "d" ||
-        event.key === "D" ||
-        event.key === "ArrowRight"
-      ) {
-        setCarPosition(
-          carPosition === "left"
-            ? "center"
-            : carPosition === "center"
-              ? "right"
-              : "right",
-        );
-      }
-    };
+    if (gameStatus === GameStatusEnum.Started) {
+      const changeCarLineHandler = (direction: "left" | "right") => {
+        console.log(direction);
+        // On move to left
+        if (direction === "left") {
+          setCarLine(
+            myCar.line === "right"
+              ? "center"
+              : myCar.line === "center"
+                ? "left"
+                : "left",
+          );
+        }
+        // On move to right
+        else if (direction === "right") {
+          setCarLine(
+            myCar.line === "left"
+              ? "center"
+              : myCar.line === "center"
+                ? "right"
+                : "right",
+          );
+        }
+      };
 
-    window.addEventListener("keydown", onMoveCarPosition);
+      const onChangeCarLineWithKeyboard = (event: KeyboardEvent) => {
+        // On move to left
+        if (
+          event.key === "a" ||
+          event.key === "A" ||
+          event.key === "ArrowLeft"
+        ) {
+          changeCarLineHandler("left");
+        }
+        // On move to right
+        else if (
+          event.key === "d" ||
+          event.key === "D" ||
+          event.key === "ArrowRight"
+        ) {
+          changeCarLineHandler("right");
+        }
+      };
 
-    return () => {
-      window.removeEventListener("keydown", onMoveCarPosition);
-    };
-  }, [carPosition]);
+      const onTouchUp = (event: TouchEvent) => {
+        if (!startTouchXPosition) return;
+
+        setStartTouchXPosition(null);
+      };
+
+      const onTouchStart = (event: TouchEvent) => {
+        setStartTouchXPosition(() => event.touches[0].clientX);
+      };
+
+      const onTouchMove = (event: TouchEvent) => {
+        let clientX = event.changedTouches[0].clientX;
+        if (!startTouchXPosition) {
+          return;
+        }
+
+        if (startTouchXPosition < clientX - 100) {
+          changeCarLineHandler("right");
+
+          setStartTouchXPosition(clientX);
+        } else if (startTouchXPosition > clientX + 100) {
+          changeCarLineHandler("left");
+
+          setStartTouchXPosition(clientX);
+        }
+      };
+
+      window.addEventListener("keydown", onChangeCarLineWithKeyboard);
+      window.addEventListener("touchend", onTouchUp);
+      window.addEventListener("touchstart", onTouchStart);
+      window.addEventListener("touchmove", onTouchMove);
+
+      return () => {
+        window.removeEventListener("keydown", onChangeCarLineWithKeyboard);
+        window.removeEventListener("touchend", onTouchUp);
+        window.removeEventListener("touchstart", onTouchStart);
+        window.removeEventListener("touchmove", onTouchMove);
+      };
+    }
+  }, [gameStatus, myCar.line, setCarLine, startTouchXPosition]);
 
   // on move Y position
   useEffect(() => {
-    let interval: any;
-
-    const onMoveCarYPosition = (event: KeyboardEvent) => {
-      if (event.key === "w" || event.key === "W" || event.key === "ArrowUp") {
-        setIsMovingY("front");
-      } else if (
-        event.key === "s" ||
-        event.key === "S" ||
-        event.key === "ArrowBottom"
-      ) {
-        setIsMovingY("back");
-      }
-    };
-
-    const onStopMoveCarYPosition = (event: KeyboardEvent) => {
-      if (
-        event.key === "w" ||
-        event.key === "W" ||
-        event.key === "ArrowUp" ||
-        event.key === "s" ||
-        event.key === "S" ||
-        event.key === "ArrowBottom"
-      ) {
-        clearInterval(interval);
-        setIsMovingY(undefined);
-      }
-    };
-
-    if (carYPosition < 5 || carYPosition > 85) {
-      clearInterval(interval);
-      setIsMovingY(undefined);
-      setCarYPosition((prev) => (carYPosition < 5 ? prev + 1 : prev - 1));
-    } else {
-      if (isMovingY === "front") {
-        interval = setInterval(() => {
-          setCarYPosition((prev) => prev - 1);
-        }, 30);
-      } else if (isMovingY === "back") {
-        interval = setInterval(() => {
-          setCarYPosition((prev) => prev + 1);
-        }, 30);
-      }
-    }
-
-    window.addEventListener("keydown", onMoveCarYPosition);
-    window.addEventListener("keyup", onStopMoveCarYPosition);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [isMovingY, carYPosition]);
-
-  // on Accident
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const myCar = myCarRef.current as unknown as React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLDivElement>,
-        HTMLDivElement
-      >;
-
-      // console.log(otherCarsPositions);
-
-      const myCarPositions: TPosition = {
-        // @ts-ignore
-        right: myCar.getBoundingClientRect().right,
-        // @ts-ignore
-        left: myCar.getBoundingClientRect().left,
-        // @ts-ignore
-        top: myCar.getBoundingClientRect().top,
-        // @ts-ignore
-        bottom: myCar.getBoundingClientRect().bottom,
-        // @ts-ignore
-        height: myCar.getBoundingClientRect().height,
-        // @ts-ignore
-        width: myCar.getBoundingClientRect().width,
+    if (gameStatus === GameStatusEnum.Started) {
+      const moveCarHandler = (direction: "front" | "back", speed = 1) => {
+        if (direction === "front") {
+          setCarYPosition(myCar.YPosition - speed);
+        } else if (direction === "back") {
+          setCarYPosition(myCar.YPosition + speed);
+        }
       };
 
-      // console.log(myCarPositions);
+      // Desktop
 
-      // console.log("object1");
+      let interval: any;
 
-      let isAccident = otherCarsPositions?.some((otherCar) => {
-        if (
-          ((otherCar.bottom >= myCarPositions.top &&
-            otherCar.bottom <= myCarPositions.bottom) ||
-            (otherCar.top >= myCarPositions.top &&
-              otherCar.top <= myCarPositions.bottom)) &&
-          ((otherCar.left <= myCarPositions.right &&
-            otherCar.left >= myCarPositions.left) ||
-            (otherCar.right >= myCarPositions.left &&
-              otherCar.right <= myCarPositions.right))
+      const onMoveCarYPositionWithKeyboard = (event: KeyboardEvent) => {
+        if (event.key === "w" || event.key === "W" || event.key === "ArrowUp") {
+          setIsMovingY("front");
+        } else if (
+          event.key === "s" ||
+          event.key === "S" ||
+          event.key === "ArrowBottom"
         ) {
-          console.log("accident");
+          setIsMovingY("back");
         }
-      });
-    }, 50);
+      };
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [otherCarsPositions, setOtherCarsPositions]);
+      const onStopMoveCarYPositionWithKeyboard = (event: KeyboardEvent) => {
+        if (
+          event.key === "w" ||
+          event.key === "W" ||
+          event.key === "ArrowUp" ||
+          event.key === "s" ||
+          event.key === "S" ||
+          event.key === "ArrowBottom"
+        ) {
+          clearInterval(interval);
+          setIsMovingY("stop");
+        }
+      };
 
-  // console.log(otherCarsPositions);
+      if (myCar.YPosition < 5 || myCar.YPosition > 85) {
+        clearInterval(interval);
+        setIsMovingY("stop");
+        setCarYPosition(
+          myCar.YPosition < 5 ? myCar.YPosition + 1 : myCar.YPosition - 1,
+        );
+      } else if (isMovingY !== "stop") {
+        interval = setInterval(() => {
+          moveCarHandler(isMovingY);
+        }, 30);
+      }
+
+      // Mobile
+
+      const onTouchStart = (event: TouchEvent) => {
+        setStartTouchYPosition(() => event.touches[0].clientY);
+      };
+
+      const onTouchMove = (event: TouchEvent) => {
+        let clientY = event.changedTouches[0].clientY;
+
+        if (!startTouchYPosition) {
+          return;
+        }
+
+        if (startTouchYPosition > clientY) {
+          moveCarHandler("front", 0.35);
+
+          setStartTouchYPosition(clientY);
+        } else if (startTouchYPosition < clientY) {
+          moveCarHandler("back", 0.35);
+
+          setStartTouchYPosition(clientY);
+        }
+      };
+
+      window.addEventListener("keydown", onMoveCarYPositionWithKeyboard);
+      window.addEventListener("keyup", onStopMoveCarYPositionWithKeyboard);
+      window.addEventListener("touchstart", onTouchStart);
+      window.addEventListener("touchmove", onTouchMove);
+
+      return () => {
+        window.removeEventListener("touchstart", onTouchStart);
+        window.removeEventListener("touchmove", onTouchMove);
+        window.removeEventListener("keydown", onMoveCarYPositionWithKeyboard);
+        window.removeEventListener("keyup", onStopMoveCarYPositionWithKeyboard);
+        clearInterval(interval);
+      };
+    }
+  }, [
+    isMovingY,
+    myCar.YPosition,
+    setCarYPosition,
+    gameStatus,
+    startTouchYPosition,
+  ]);
+
+  // on Accident AND set myCar to store
+  useEffect(() => {
+    if (gameStatus === GameStatusEnum.Started) {
+      const interval = setInterval(() => {
+        const myCarElement =
+          myCarRef.current as unknown as React.DetailedHTMLProps<
+            React.HTMLAttributes<HTMLDivElement>,
+            HTMLDivElement
+          >;
+
+        const myCarPositions: TPosition = {
+          // @ts-ignore
+          right: myCarElement.getBoundingClientRect().right,
+          // @ts-ignore
+          left: myCarElement.getBoundingClientRect().left,
+          // @ts-ignore
+          top: myCarElement.getBoundingClientRect().top,
+          // @ts-ignore
+          bottom: myCarElement.getBoundingClientRect().bottom,
+          // @ts-ignore
+          height: myCarElement.getBoundingClientRect().height,
+          // @ts-ignore
+          width: myCarElement.getBoundingClientRect().width,
+        };
+
+        setMyCar({
+          line: myCar.line,
+          position: myCarPositions,
+          YPosition: myCar.YPosition,
+        });
+
+        otherCars?.some((otherCar) => {
+          if (otherCar.position) {
+            if (
+              ((otherCar.position?.bottom >= myCarPositions.top &&
+                otherCar.position?.bottom <= myCarPositions.bottom) ||
+                (otherCar.position?.top >= myCarPositions.top &&
+                  otherCar.position?.top <= myCarPositions.bottom)) &&
+              ((otherCar.position?.left <= myCarPositions.right &&
+                otherCar.position?.left >= myCarPositions.left) ||
+                (otherCar.position?.right >= myCarPositions.left &&
+                  otherCar.position?.right <= myCarPositions.right))
+            ) {
+              // if (gameStatus === GameStatusEnum.Restart) return null;
+              setGameStatus(GameStatusEnum.Accident);
+            }
+          }
+        });
+      }, 25);
+
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [otherCars, setOtherCars, setGameStatus, myCar, setMyCar, gameStatus]);
+
+  // on Restart game
+  // useEffect(() => {
+  //   if (gameStatus === GameStatusEnum.Restart) {
+  //     setCarYPosition(85);
+  //     setCarLine("center");
+  //   }
+  // }, [gameStatus, setCarLine]);
 
   return (
     <div
-      className={cn(
-        "flex h-full w-full justify-center px-5 py-4 transition-all",
-      )}>
+      className={cn("flex h-full w-full justify-center py-4 transition-all")}>
       <div
-        className={cn("px-[18px] transition-all ease-linear")}
+        className={cn("w-4/12 px-4 transition-all ease-linear")}
         style={{
-          transform: `translateY(${carYPosition}%) translateX(${
-            carPosition === "left"
+          transform: `translateY(${myCar.YPosition}%) translateX(${
+            myCar.line === "left"
               ? "-100%"
-              : carPosition === "center"
+              : myCar.line === "center"
                 ? "0px"
-                : carPosition === "right"
+                : myCar.line === "right"
                   ? "100%"
                   : "0px"
           })`,
         }}>
         <div
           ref={myCarRef}
-          className="h-16 w-16 rounded-md bg-black transition-all"></div>
+          className="h-20 w-full rounded-md bg-black transition-all"></div>
       </div>
     </div>
   );

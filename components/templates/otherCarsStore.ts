@@ -1,18 +1,18 @@
 "use client";
 
-import { TPosition } from "@/types";
+import { TOtherCar } from "@/types";
 import { create } from "zustand";
 
 export type State = {
-  otherCarsPositions?: TPosition[];
+  otherCars?: TOtherCar[];
 };
 
 export type Actions = {
-  setOtherCarsPositions: (positions: TPosition[]) => void;
+  setOtherCars: (otherCars: TOtherCar[]) => void;
 };
 
 export const useOtherCarsStore = create<State & Actions>()((set) => ({
-  setOtherCarsPositions(positions) {
-    set({ otherCarsPositions: positions });
+  setOtherCars(otherCars) {
+    set({ otherCars: otherCars });
   },
 }));

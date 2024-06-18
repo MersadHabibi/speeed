@@ -1,5 +1,6 @@
 export enum GameStatusEnum {
-  Started,
-  Accident,
-  notStarted,
+  Started = "Started",
+  Accident = "Accident",
+  NotStarted = "NotStarted",
+  Restart = "Restart",
 }

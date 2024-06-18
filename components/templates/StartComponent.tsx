@@ -21,6 +21,8 @@ export default function StartComponent() {
       setCounter((prev) => {
         if (prev === 0) {
           setGameStatus(GameStatusEnum.Started);
+          setCounter(3);
+          setIsStarted(false);
 
           clearInterval(interval);
           return 0;
@@ -31,11 +33,13 @@ export default function StartComponent() {
     }, 1000);
   };
 
+  // on Restart Game
+
   return (
     <div
       className={cn(
         "invisible fixed inset-0 z-10 flex size-full items-center justify-center bg-black/40 opacity-0 backdrop-blur-md transition",
-        gameStatus === GameStatusEnum.notStarted && "visible opacity-100",
+        gameStatus === GameStatusEnum.NotStarted && "visible opacity-100",
       )}>
       {isStarted ? (
         <div

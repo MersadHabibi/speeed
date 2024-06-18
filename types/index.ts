@@ -7,4 +7,17 @@ export type TPosition = {
   height: number;
 };
 
-export type TCarPosition = "left" | "center" | "right";
+export type TCarLine = "left" | "center" | "right";
+
+export type TMyCar = {
+  position?: TPosition;
+  YPosition: number;
+  line: TCarLine;
+};
+
+export type TOtherCar = {
+  id: number;
+  position?: TPosition;
+  line: TCarLine;
+  speed: number;
+};
