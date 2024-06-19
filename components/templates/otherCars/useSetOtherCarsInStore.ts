@@ -18,8 +18,8 @@ export default function useSetOtherCarsInStore() {
         otherCars?.forEach((car, index) => {
           const carElement = document.querySelector(`.other-car-${car.id}`);
           carsPositions[index].position = {
-            top: (carElement?.getBoundingClientRect().top as number) + 5, // add 5px for delay
-            bottom: (carElement?.getBoundingClientRect().bottom as number) + 5, // add 5px for delay
+            top: carElement?.getBoundingClientRect().top as number, // add 5px for delay
+            bottom: carElement?.getBoundingClientRect().bottom as number, // add 5px for delay
             left: carElement?.getBoundingClientRect().left as number,
             right: carElement?.getBoundingClientRect().right as number,
             width: carElement?.getBoundingClientRect().width as number,
@@ -29,7 +29,7 @@ export default function useSetOtherCarsInStore() {
 
         setOtherCars(carsPositions);
         // changeCarsSpeedWhenReachBehindCar();
-      }, 5);
+      }, 2);
 
       return () => {
         clearInterval(setCarsPositions);
