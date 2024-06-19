@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 @layer components {
+  /* Street line */
+
   .street-line-animation {
     animation-name: street-line-animation;
     animation-iteration-count: infinite;
@@ -17,7 +19,7 @@
     }
   }
 
-  /*  */
+  /* Other car */
 
   .other-car {
     animation-name: other-car-animation;
@@ -33,6 +35,27 @@
     }
     to {
       transform: translateY(120%);
+    }
+  }
+
+  /* Increase token */
+
+  .increase-token-animation-element {
+    animation-name: increase-token-animation;
+    animation-duration: 1s;
+  }
+
+  @keyframes increase-token-animation {
+    10% {
+      opacity: 0;
+      transform: translateY(0);
+    }
+    12% {
+      opacity: 100%;
+    }
+    to {
+      opacity: 100%;
+      transform: translateY(-200%);
     }
   }
 }

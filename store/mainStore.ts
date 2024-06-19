@@ -9,12 +9,15 @@ export type State = {
   maxSpeed: number;
   traffic: number;
   maxTraffic: number;
+  tokens: number;
 };
 
 export type Actions = {
   setGameStatus: (gameStatus: GameStatusEnum) => void;
   setSpeed: (speed: number) => void;
   setTraffic: (traffic: number) => void;
+  setTokens: (tokens: number) => void;
+  increaseTokens: (tokens: number) => void;
 };
 
 export const useMainStore = create<State & Actions>()((set) => ({
@@ -23,6 +26,7 @@ export const useMainStore = create<State & Actions>()((set) => ({
   maxSpeed: 10,
   traffic: 2000, // less number == more traffic
   maxTraffic: 1000,
+  tokens: 0,
   setGameStatus(gameStatus) {
     set({ gameStatus: gameStatus });
   },
@@ -31,5 +35,15 @@ export const useMainStore = create<State & Actions>()((set) => ({
   },
   setTraffic(traffic) {
     set({ traffic });
+  },
+  setTokens(tokens) {
+    set({ tokens });
+  },
+  increaseTokens(tokens) {
+    set((state) => {
+      const sumTokens = state.tokens + tokens;
+
+      return { tokens: sumTokens };
+    });
   },
 }));

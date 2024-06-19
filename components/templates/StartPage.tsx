@@ -7,7 +7,7 @@ import { useMainStore } from "@/store/mainStore";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
 
-export default function StartComponent() {
+export default function StartPage() {
   const [isStarted, setIsStarted] = useState(false);
   const [counter, setCounter] = useState(3);
 
@@ -38,7 +38,7 @@ export default function StartComponent() {
   return (
     <div
       className={cn(
-        "invisible fixed inset-0 z-10 flex size-full items-center justify-center bg-black/40 opacity-0 backdrop-blur-md transition",
+        "invisible fixed inset-0 z-10 flex h-dvh w-full items-center justify-center bg-black/40 opacity-0 backdrop-blur-md transition",
         gameStatus === GameStatusEnum.NotStarted && "visible opacity-100",
       )}>
       {isStarted ? (

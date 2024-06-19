@@ -4,20 +4,20 @@ import { GameStatusEnum } from "@/enums";
 import { cn } from "@/lib/utils";
 import { useMainStore } from "@/store/mainStore";
 import { Button } from "@nextui-org/button";
-import { useMyCarStore } from "./myCarStore";
-import { useOtherCarsStore } from "./otherCarsStore";
+import { useOtherCarsStore } from "./otherCars/otherCarsStore";
+import { usePlayerCarStore } from "./playerCar/playerCarStore";
 
-export default function AccidentComponent() {
+export default function AccidentPage() {
   const gameStatus = useMainStore((state) => state.gameStatus);
   const setGameStatus = useMainStore((state) => state.setGameStatus);
 
-  const setMyCar = useMyCarStore((state) => state.setMyCar);
+  const setPlayerCar = usePlayerCarStore((state) => state.setPlayerCar);
 
   const setOtherCars = useOtherCarsStore((state) => state.setOtherCars);
 
   const onReStartGame = () => {
     setGameStatus(GameStatusEnum.NotStarted);
-    setMyCar({
+    setPlayerCar({
       line: "center",
       YPosition: 85,
       position: {

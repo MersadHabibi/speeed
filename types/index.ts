@@ -9,7 +9,7 @@ export type TPosition = {
 
 export type TCarLine = "left" | "center" | "right";
 
-export type TMyCar = {
+export type TPlayerCar = {
   position?: TPosition;
   YPosition: number;
   line: TCarLine;

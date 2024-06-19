@@ -14,7 +14,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn("h-dvh w-dvw overflow-hidden", roboto.className)}>
+      <body
+        className={cn(
+          "h-dvh w-dvw overflow-hidden text-white",
+          roboto.className,
+        )}>
         {children}
       </body>
     </html>
