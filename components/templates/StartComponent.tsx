@@ -3,7 +3,7 @@
 import { VT323Font } from "@/config/fonts";
 import { GameStatusEnum } from "@/enums";
 import { cn } from "@/lib/utils";
-import { useMainStore } from "@/stores/mainStore";
+import { useMainStore } from "@/store/mainStore";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
 

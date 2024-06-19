@@ -2,7 +2,7 @@
 
 import { GameStatusEnum } from "@/enums";
 import { cn } from "@/lib/utils";
-import { useMainStore } from "@/stores/mainStore";
+import { useMainStore } from "@/store/mainStore";
 import { Button } from "@nextui-org/button";
 import { useMyCarStore } from "./myCarStore";
 import { useOtherCarsStore } from "./otherCarsStore";

@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { useOtherCarsStore } from "./otherCarsStore";
 import { TCarLine, TPosition } from "@/types";
-import { useMainStore } from "@/stores/mainStore";
+import { useMainStore } from "@/store/mainStore";
 import { GameStatusEnum } from "@/enums";
 import { useMyCarStore } from "./myCarStore";
 
@@ -228,60 +228,60 @@ export default function MyCar() {
   ]);
 
   // on Accident AND set myCar to store
-  useEffect(() => {
-    if (gameStatus === GameStatusEnum.Started) {
-      const interval = setInterval(() => {
-        const myCarElement =
-          myCarRef.current as unknown as React.DetailedHTMLProps<
-            React.HTMLAttributes<HTMLDivElement>,
-            HTMLDivElement
-          >;
+  // useEffect(() => {
+  //   if (gameStatus === GameStatusEnum.Started) {
+  //     const interval = setInterval(() => {
+  //       const myCarElement =
+  //         myCarRef.current as unknown as React.DetailedHTMLProps<
+  //           React.HTMLAttributes<HTMLDivElement>,
+  //           HTMLDivElement
+  //         >;
 
-        const myCarPositions: TPosition = {
-          // @ts-ignore
-          right: myCarElement.getBoundingClientRect().right,
-          // @ts-ignore
-          left: myCarElement.getBoundingClientRect().left,
-          // @ts-ignore
-          top: myCarElement.getBoundingClientRect().top,
-          // @ts-ignore
-          bottom: myCarElement.getBoundingClientRect().bottom,
-          // @ts-ignore
-          height: myCarElement.getBoundingClientRect().height,
-          // @ts-ignore
-          width: myCarElement.getBoundingClientRect().width,
-        };
+  //       const myCarPositions: TPosition = {
+  //         // @ts-ignore
+  //         right: myCarElement.getBoundingClientRect().right,
+  //         // @ts-ignore
+  //         left: myCarElement.getBoundingClientRect().left,
+  //         // @ts-ignore
+  //         top: myCarElement.getBoundingClientRect().top,
+  //         // @ts-ignore
+  //         bottom: myCarElement.getBoundingClientRect().bottom,
+  //         // @ts-ignore
+  //         height: myCarElement.getBoundingClientRect().height,
+  //         // @ts-ignore
+  //         width: myCarElement.getBoundingClientRect().width,
+  //       };
 
-        setMyCar({
-          line: myCar.line,
-          position: myCarPositions,
-          YPosition: myCar.YPosition,
-        });
+  //       setMyCar({
+  //         line: myCar.line,
+  //         position: myCarPositions,
+  //         YPosition: myCar.YPosition,
+  //       });
 
-        otherCars?.some((otherCar) => {
-          if (otherCar.position) {
-            if (
-              ((otherCar.position?.bottom >= myCarPositions.top &&
-                otherCar.position?.bottom <= myCarPositions.bottom) ||
-                (otherCar.position?.top >= myCarPositions.top &&
-                  otherCar.position?.top <= myCarPositions.bottom)) &&
-              ((otherCar.position?.left <= myCarPositions.right &&
-                otherCar.position?.left >= myCarPositions.left) ||
-                (otherCar.position?.right >= myCarPositions.left &&
-                  otherCar.position?.right <= myCarPositions.right))
-            ) {
-              // if (gameStatus === GameStatusEnum.Restart) return null;
-              setGameStatus(GameStatusEnum.Accident);
-            }
-          }
-        });
-      }, 25);
+  //       otherCars?.some((otherCar) => {
+  //         if (otherCar.position) {
+  //           if (
+  //             ((otherCar.position?.bottom >= myCarPositions.top &&
+  //               otherCar.position?.bottom <= myCarPositions.bottom) ||
+  //               (otherCar.position?.top >= myCarPositions.top &&
+  //                 otherCar.position?.top <= myCarPositions.bottom)) &&
+  //             ((otherCar.position?.left <= myCarPositions.right &&
+  //               otherCar.position?.left >= myCarPositions.left) ||
+  //               (otherCar.position?.right >= myCarPositions.left &&
+  //                 otherCar.position?.right <= myCarPositions.right))
+  //           ) {
+  //             // if (gameStatus === GameStatusEnum.Restart) return null;
+  //             setGameStatus(GameStatusEnum.Accident);
+  //           }
+  //         }
+  //       });
+  //     }, 25);
 
-      return () => {
-        clearInterval(interval);
-      };
-    }
-  }, [otherCars, setOtherCars, setGameStatus, myCar, setMyCar, gameStatus]);
+  //     return () => {
+  //       clearInterval(interval);
+  //     };
+  //   }
+  // }, [otherCars, setOtherCars, setGameStatus, myCar, setMyCar, gameStatus]);
 
   // on Restart game
   // useEffect(() => {
@@ -295,7 +295,7 @@ export default function MyCar() {
     <div
       className={cn("flex h-full w-full justify-center py-4 transition-all")}>
       <div
-        className={cn("w-4/12 px-4 transition-all ease-linear")}
+        className={cn("w-4/12 px-4 transition-all")}
         style={{
           transform: `translateY(${myCar.YPosition}%) translateX(${
             myCar.line === "left"
@@ -306,6 +306,8 @@ export default function MyCar() {
                   ? "100%"
                   : "0px"
           })`,
+
+          transitionTimingFunction: "linear",
         }}>
         <div
           ref={myCarRef}

@@ -2,7 +2,7 @@
 
 import { GameStatusEnum } from "@/enums";
 import { cn, rand } from "@/lib/utils";
-import { useMainStore } from "@/stores/mainStore";
+import { useMainStore } from "@/store/mainStore";
 import { TOtherCar } from "@/types";
 import { useEffect, useState } from "react";
 import { useOtherCarsStore } from "./otherCarsStore";
@@ -19,37 +19,39 @@ export default function OtherCars() {
 
   // add other cars
   useEffect(() => {
+    const addCar = () => {
+      let rnd = rand(0, 2);
+      let speedNumber = rand(1, 3);
+
+      const randomNumber =
+        prevRandomNumber === 0
+          ? rand(1, 2)
+          : prevRandomNumber === 1
+            ? rnd === 1
+              ? rand(0, 2)
+              : rnd
+            : rand(0, 1);
+
+      setPrevRandomNumber(randomNumber);
+
+      setOtherCars([
+        ...(otherCars as TOtherCar[]),
+        {
+          id: otherCars?.length ? otherCars.length + 1 : 1,
+          position: undefined,
+          line:
+            randomNumber === 0
+              ? "left"
+              : randomNumber === 1
+                ? "center"
+                : "right",
+          speed: speedNumber,
+        },
+      ]);
+    };
+
     if (gameStatus === GameStatusEnum.Started) {
-      const addCarInterval = setInterval(() => {
-        let rnd = rand(0, 2);
-        let speedNumber = rand(1, 3);
-
-        const randomNumber =
-          prevRandomNumber === 0
-            ? rand(1, 2)
-            : prevRandomNumber === 1
-              ? rnd === 1
-                ? rand(0, 2)
-                : rnd
-              : rand(0, 1);
-
-        setPrevRandomNumber(randomNumber);
-
-        setOtherCars([
-          ...(otherCars as TOtherCar[]),
-          {
-            id: otherCars?.length ? otherCars.length + 1 : 1,
-            position: undefined,
-            line:
-              randomNumber === 0
-                ? "left"
-                : randomNumber === 1
-                  ? "center"
-                  : "right",
-            speed: speedNumber,
-          },
-        ]);
-      }, traffic);
+      const addCarInterval = setInterval(() => addCar(), traffic);
 
       return () => {
         clearInterval(addCarInterval);
@@ -162,8 +164,12 @@ export default function OtherCars() {
               )}>
               <div
                 className={`other-car w-4/12 translate-y-[120%] px-4 transition-all`}
-                style={{
-                  animationDuration: speed / 7 + car.speed + "s",
+                // style={{
+                //   animationDuration: speed / 7 + car.speed + "s",
+                // }}
+                onAnimationStart={(event) => {
+                  event.currentTarget.style.animationDuration =
+                    speed / 10 + car.speed + "s";
                 }}>
                 <div
                   className={`other-car-${car.id} h-20 w-full rounded-md bg-black transition-all`}></div>
