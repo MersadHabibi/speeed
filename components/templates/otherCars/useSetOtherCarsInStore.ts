@@ -29,7 +29,7 @@ export default function useSetOtherCarsInStore() {
 
         setOtherCars(carsPositions);
         // changeCarsSpeedWhenReachBehindCar();
-      }, 25);
+      }, 5);
 
       return () => {
         clearInterval(setCarsPositions);

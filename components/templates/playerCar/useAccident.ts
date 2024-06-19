@@ -65,7 +65,7 @@ export default function useAccident(props: TProps) {
             }
           }
         });
-      }, 25);
+      }, 5);
 
       return () => {
         clearInterval(interval);
