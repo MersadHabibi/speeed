@@ -39,6 +39,8 @@ export default function useChangePlayerCarLine() {
         }
       };
 
+      // Desktop
+
       const onChangeCarLineWithKeyboard = (event: KeyboardEvent) => {
         // On move to left
         if (
@@ -58,6 +60,8 @@ export default function useChangePlayerCarLine() {
         }
       };
 
+      // Mobile
+
       const onTouchUp = (event: TouchEvent) => {
         if (!startTouchXPosition) return;
 
@@ -75,13 +79,13 @@ export default function useChangePlayerCarLine() {
         }
 
         if (startTouchXPosition < clientX - 50) {
+          setStartTouchXPosition(() => clientX);
+
           changeCarLineHandler("right");
-
-          setStartTouchXPosition(clientX);
         } else if (startTouchXPosition > clientX + 50) {
-          changeCarLineHandler("left");
+          setStartTouchXPosition(() => clientX);
 
-          setStartTouchXPosition(clientX);
+          changeCarLineHandler("left");
         }
       };
 

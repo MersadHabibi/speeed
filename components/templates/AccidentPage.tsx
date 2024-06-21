@@ -6,29 +6,19 @@ import { useMainStore } from "@/store/mainStore";
 import { Button } from "@nextui-org/button";
 import { useOtherCarsStore } from "./otherCars/otherCarsStore";
 import { usePlayerCarStore } from "./playerCar/playerCarStore";
+import { RotateCWWIcon } from "../modules/icons";
 
 export default function AccidentPage() {
   const gameStatus = useMainStore((state) => state.gameStatus);
   const setGameStatus = useMainStore((state) => state.setGameStatus);
 
-  const setPlayerCar = usePlayerCarStore((state) => state.setPlayerCar);
+  const resetPlayerCar = usePlayerCarStore((state) => state.resetPlayerCar);
 
   const setOtherCars = useOtherCarsStore((state) => state.setOtherCars);
 
   const onReStartGame = () => {
     setGameStatus(GameStatusEnum.NotStarted);
-    setPlayerCar({
-      line: "center",
-      YPosition: 85,
-      position: {
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 0,
-        width: 0,
-      },
-    });
+    resetPlayerCar();
     setOtherCars([]);
   };
 
@@ -39,13 +29,13 @@ export default function AccidentPage() {
         gameStatus === GameStatusEnum.Accident && "visible opacity-100",
       )}>
       <div className="flex flex-col items-center gap-y-10">
-        <p className="text-3xl font-medium text-white">You had an accident</p>
         <Button
-          size="lg"
-          color="success"
-          className="z-10 font-medium tracking-wide text-white shadow-xl"
+          radius="full"
+          variant="light"
+          isIconOnly
+          className="z-10 !size-14 animate-pulse rounded-sm !bg-transparent text-white"
           onClick={onReStartGame}>
-          Restart game
+          <RotateCWWIcon className="size-12" />
         </Button>
       </div>
     </div>

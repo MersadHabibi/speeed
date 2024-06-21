@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { useMainStore } from "@/store/mainStore";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
+import { PlayIcon, ShoppingCartIcon } from "../modules/icons";
+import Link from "next/link";
 
 export default function StartPage() {
   const [isStarted, setIsStarted] = useState(false);
@@ -38,13 +40,13 @@ export default function StartPage() {
   return (
     <div
       className={cn(
-        "invisible fixed inset-0 z-10 flex h-dvh w-full items-center justify-center bg-black/40 opacity-0 backdrop-blur-md transition",
+        "invisible fixed inset-0 z-10 h-dvh w-full bg-black/40 opacity-0 backdrop-blur-md",
         gameStatus === GameStatusEnum.NotStarted && "visible opacity-100",
       )}>
       {isStarted ? (
         <div
           className={cn(
-            "text-8xl font-semibold text-white",
+            "flex size-full items-center justify-center text-8xl font-semibold text-white",
             counter === 3 && "text-green-500",
             counter === 2 && "text-yellow-500",
             counter === 1 && "text-orange-500",
@@ -54,13 +56,16 @@ export default function StartPage() {
           {counter}
         </div>
       ) : (
-        <Button
-          size="lg"
-          color="success"
-          className="z-10 font-medium tracking-wide text-white shadow-xl"
-          onClick={onStartGame}>
-          Start game
-        </Button>
+        <div className="relative flex size-full flex-col items-center justify-center">
+          <Button
+            radius="full"
+            variant="light"
+            isIconOnly
+            className="z-10 !size-14 animate-pulse rounded-sm !bg-transparent text-white"
+            onClick={onStartGame}>
+            <PlayIcon className="size-12" />
+          </Button>
+        </div>
       )}
     </div>
   );

@@ -3,4 +3,5 @@ export enum GameStatusEnum {
   Accident = "Accident",
   NotStarted = "NotStarted",
   Restart = "Restart",
+  Shop = "Shop",
 }

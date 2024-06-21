@@ -1,3 +1,7 @@
+export type IconSvgProps = React.SVGProps<SVGSVGElement> & {
+  size?: number;
+};
+
 export type TPosition = {
   top: number;
   bottom: number;
@@ -9,10 +13,18 @@ export type TPosition = {
 
 export type TCarLine = "left" | "center" | "right";
 
+export type TCarStyle = {
+  id: number;
+  name: string;
+  src: string;
+  price: number;
+};
+
 export type TPlayerCar = {
   position?: TPosition;
   YPosition: number;
   line: TCarLine;
+  carStyle: TCarStyle;
 };
 
 export type TOtherCar = {

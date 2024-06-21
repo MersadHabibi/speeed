@@ -1,5 +1,6 @@
 "use client";
 
+import Car from "@/components/modules/Car";
 import { cn } from "@/lib/utils";
 import { useRef } from "react";
 import { usePlayerCarStore } from "./playerCarStore";
@@ -39,9 +40,7 @@ export default function PlayerCar() {
 
           transitionTimingFunction: "linear",
         }}>
-        <div
-          ref={playerCarRef}
-          className="h-20 w-full rounded-md bg-black transition-all"></div>
+        <Car ref={playerCarRef} carStyle={playerCar.carStyle} />
       </div>
     </div>
   );

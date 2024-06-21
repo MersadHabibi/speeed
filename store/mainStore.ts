@@ -16,6 +16,7 @@ export type Actions = {
   setGameStatus: (gameStatus: GameStatusEnum) => void;
   setSpeed: (speed: number) => void;
   setTraffic: (traffic: number) => void;
+  getTokensFromLocalStorage: () => void;
   setTokens: (tokens: number) => void;
   increaseTokens: (tokens: number) => void;
 };
@@ -36,12 +37,23 @@ export const useMainStore = create<State & Actions>()((set) => ({
   setTraffic(traffic) {
     set({ traffic });
   },
+  getTokensFromLocalStorage() {
+    const tokens = localStorage.getItem("tokens") || 0;
+
+    if (!tokens) return;
+
+    set({ tokens: +tokens });
+  },
   setTokens(tokens) {
+    localStorage.setItem("tokens", tokens.toString());
+
     set({ tokens });
   },
   increaseTokens(tokens) {
     set((state) => {
       const sumTokens = state.tokens + tokens;
+
+      localStorage.setItem("token", sumTokens.toString());
 
       return { tokens: sumTokens };
     });

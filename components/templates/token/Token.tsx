@@ -7,6 +7,10 @@ import { useMainStore } from "@/store/mainStore";
 import Image from "next/image";
 import useIncreaseTokenByOtherCars from "./useIncreaseTokenByOtherCars";
 import { useEffect, useState } from "react";
+import { Button } from "@nextui-org/button";
+import { ShoppingCartIcon } from "@/components/modules/icons";
+import Link from "next/link";
+import Shop from "../shop/Shop";
 
 export default function Token() {
   const [prevTokens, setPrevTokens] = useState(0);
@@ -16,26 +20,17 @@ export default function Token() {
 
   const tokens = useMainStore((state) => state.tokens);
   const setTokens = useMainStore((state) => state.setTokens);
+  const getTokensFromLocalStorage = useMainStore(
+    (state) => state.getTokensFromLocalStorage,
+  );
 
   // Get tokens from localStorage
   useEffect(() => {
-    const savedTokens = +(localStorage.getItem("tokens") || 0);
-
-    if (!savedTokens) return;
-
-    setTokens(savedTokens);
-    setPrevTokens(tokens); // for disable animation
-  }, [setTokens, tokens]);
+    getTokensFromLocalStorage();
+  }, [getTokensFromLocalStorage]);
 
   // Increase token
   useIncreaseTokenByOtherCars();
-
-  // Set token to localStorage when gameStatus is accident
-  useEffect(() => {
-    if (gameStatus === GameStatusEnum.Accident) {
-      localStorage.setItem("tokens", tokens.toString());
-    }
-  }, [gameStatus, tokens]);
 
   // Animation when increase token
   useEffect(() => {
@@ -48,39 +43,40 @@ export default function Token() {
   return (
     <div
       className={cn(
-        "pointer-events-none fixed inset-0 bottom-auto z-50 flex select-none items-center justify-center transition-all duration-300 ease-in md:justify-start",
+        "fixed inset-0 bottom-auto z-20 flex h-12 select-none items-center justify-center transition-all duration-300 ease-in md:h-16 md:justify-start",
         gameStatus === GameStatusEnum.Started &&
           "bg-black/20 shadow-md backdrop-blur-md",
       )}>
-      <div className="flex h-12 w-full items-center justify-between px-3">
-        <div className="relative flex items-center gap-x-2">
+      <div className="flex w-full items-center justify-between px-3">
+        <div className="relative flex items-center gap-x-1.5">
           <Image
-            src={"/images/coin.png"}
+            src={"/images/token.png"}
             width={50}
             height={50}
             alt="Token"
-            className="size-8 md:size-10"
+            className="size-8 md:size-12"
           />
           <span
-            className={cn(
-              "text-2xl font-bold text-yellow-400 md:text-4xl",
-              VT323Font.className,
-            )}>
+            className={cn("text-2xl font-bold text-yellow-400 md:text-4xl")}>
             {tokens}
           </span>
           {howManyIncreaseToken ? (
             <div
               className={cn(
-                "increase-token-animation-element absolute bottom-0 left-full top-0 mt-auto h-fit pl-1 font-bold text-green-500 opacity-0 md:text-4xl",
-                VT323Font.className,
+                "increase-token-animation-element absolute bottom-0 left-full top-0 mt-auto h-fit pl-1 font-bold opacity-0 md:text-4xl",
+                howManyIncreaseToken > 0 ? "text-green-500" : "text-red-500",
               )}
               onAnimationEnd={() => {
                 setHowManyIncreaseToken(0);
               }}>
-              <span>+{howManyIncreaseToken}</span>
+              <span>
+                {howManyIncreaseToken > 0 ? "+" : "-"}
+                {howManyIncreaseToken}
+              </span>
             </div>
           ) : null}
         </div>
+        {gameStatus !== GameStatusEnum.Started ? <Shop /> : null}
       </div>
     </div>
   );

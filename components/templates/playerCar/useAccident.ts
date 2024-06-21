@@ -14,7 +14,9 @@ export default function useAccident(props: TProps) {
   const setGameStatus = useMainStore((state) => state.setGameStatus);
 
   const playerCar = usePlayerCarStore((state) => state.playerCar);
-  const setPlayerCar = usePlayerCarStore((state) => state.setPlayerCar);
+  const setPlayerCarPositions = usePlayerCarStore(
+    (state) => state.setPlayerCarPositions,
+  );
 
   const otherCars = useOtherCarsStore((state) => state.otherCars);
 
@@ -42,11 +44,7 @@ export default function useAccident(props: TProps) {
           width: playerCarElement.getBoundingClientRect().width,
         };
 
-        setPlayerCar({
-          line: playerCar.line,
-          position: playerCarPositions,
-          YPosition: playerCar.YPosition,
-        });
+        setPlayerCarPositions(playerCarPositions);
 
         otherCars?.some((otherCar) => {
           if (otherCar.position) {
@@ -71,13 +69,5 @@ export default function useAccident(props: TProps) {
         clearInterval(interval);
       };
     }
-  }, [
-    gameStatus,
-    otherCars,
-    playerCar.line,
-    playerCar.YPosition,
-    setGameStatus,
-    setPlayerCar,
-    props,
-  ]);
+  }, [gameStatus, otherCars, setGameStatus, setPlayerCarPositions, props]);
 }
