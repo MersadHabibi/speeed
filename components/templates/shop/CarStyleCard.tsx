@@ -69,12 +69,19 @@ export default memo(function CarStyleCard({
           className="object-contain"
         />
       </div>
-      <div className="card-title my-1">{carStyle.name}</div>
+      <div className="mt-2 flex flex-col gap-y-1">
+        <div className="card-title">{carStyle.name}</div>
+        <p className="text-center text-gray-300">
+          Bonus for each car :{" "}
+          <span className="text-green-500">${carStyle.bonus}</span>
+        </p>
+      </div>
 
       <hr className="card-divider" />
       <div className="card-footer">
         <div className="card-price">
-          <span>$</span> {carStyle.price.toLocaleString("EN")}
+          <span>$</span>{" "}
+          {carStyle.price ? carStyle.price.toLocaleString("EN") : "FREE"}
         </div>
         {isPurchased ? (
           isSelected ? (

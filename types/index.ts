@@ -18,6 +18,7 @@ export type TCarStyle = {
   name: string;
   src: string;
   price: number;
+  bonus: number;
 };
 
 export type TPlayerCar = {

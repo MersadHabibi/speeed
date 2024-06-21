@@ -19,6 +19,7 @@ export type Actions = {
   getTokensFromLocalStorage: () => void;
   setTokens: (tokens: number) => void;
   increaseTokens: (tokens: number) => void;
+  resetMainStore: () => void;
 };
 
 export const useMainStore = create<State & Actions>()((set) => ({
@@ -57,5 +58,8 @@ export const useMainStore = create<State & Actions>()((set) => ({
 
       return { tokens: sumTokens };
     });
+  },
+  resetMainStore() {
+    set({ speed: 30, traffic: 2000 });
   },
 }));
