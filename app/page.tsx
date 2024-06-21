@@ -1,8 +1,10 @@
 "use client";
 
 import AccidentPage from "@/components/templates/AccidentPage";
+import Fuel from "@/components/templates/fuel/Fuel";
 import OtherCars from "@/components/templates/otherCars/OtherCars";
 import PlayerCar from "@/components/templates/playerCar/PlayerCar";
+import Shop from "@/components/templates/shop/Shop";
 import StartPage from "@/components/templates/StartPage";
 import StreetLines from "@/components/templates/StreetLines";
 import Token from "@/components/templates/token/Token";
@@ -22,6 +24,8 @@ export default function Home() {
         <OtherCars />
       </div>
       <AccidentPage />
+      <Shop />
+      <Fuel />
     </div>
   );
 }

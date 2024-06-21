@@ -1,22 +1,22 @@
 "use client";
 
-import { VT323Font } from "@/config/fonts";
 import { GameStatusEnum } from "@/enums";
 import { cn } from "@/lib/utils";
 import { useMainStore } from "@/store/mainStore";
 import Image from "next/image";
-import useIncreaseTokenByOtherCars from "./useIncreaseTokenByOtherCars";
 import { useEffect, useState } from "react";
+import useIncreaseTokenByOtherCars from "./useIncreaseTokenByOtherCars";
 import { Button } from "@nextui-org/button";
-import { ShoppingCartIcon } from "@/components/modules/icons";
-import Link from "next/link";
-import Shop from "../shop/Shop";
+import { ChevronLeftIcon, ShoppingCartIcon } from "@/components/modules/icons";
 
 export default function Token() {
+  const [prevGameStatus, setPrevGameStatus] = useState<GameStatusEnum>();
+
   const [prevTokens, setPrevTokens] = useState(0);
   const [howManyIncreaseToken, setHowManyIncreaseToken] = useState(0);
 
   const gameStatus = useMainStore((state) => state.gameStatus);
+  const setGameStatus = useMainStore((state) => state.setGameStatus);
 
   const tokens = useMainStore((state) => state.tokens);
   const setTokens = useMainStore((state) => state.setTokens);
@@ -43,9 +43,8 @@ export default function Token() {
   return (
     <div
       className={cn(
-        "fixed inset-0 bottom-auto z-20 flex h-12 select-none items-center justify-center transition-all duration-300 ease-in md:h-16 md:justify-start",
-        gameStatus === GameStatusEnum.Started &&
-          "bg-black/20 shadow-md backdrop-blur-md",
+        "fixed inset-0 bottom-auto z-20 flex h-12 select-none items-center justify-center bg-neutral-900 shadow-md backdrop-blur-md transition-all duration-300 ease-in md:h-16 md:justify-start",
+        gameStatus === GameStatusEnum.Started && "bg-black/20",
       )}>
       <div className="flex w-full items-center justify-between px-3">
         <div className="relative flex items-center gap-x-1.5">
@@ -76,7 +75,29 @@ export default function Token() {
             </div>
           ) : null}
         </div>
-        {gameStatus !== GameStatusEnum.Started ? <Shop /> : null}
+        {gameStatus !== GameStatusEnum.Started ? (
+          <Button
+            radius="full"
+            variant="flat"
+            isIconOnly
+            className="z-10 !size-8 !min-w-0 rounded-md !bg-transparent !p-0 text-white md:!size-9"
+            onClick={() => {
+              if (gameStatus === GameStatusEnum.Shop) {
+                setGameStatus(
+                  prevGameStatus ? prevGameStatus : GameStatusEnum.Started,
+                );
+              } else {
+                setPrevGameStatus(gameStatus);
+                setGameStatus(GameStatusEnum.Shop);
+              }
+            }}>
+            {gameStatus === GameStatusEnum.Shop ? (
+              <ChevronLeftIcon className="size-7 md:size-8" />
+            ) : (
+              <ShoppingCartIcon className="size-6 md:size-8" />
+            )}
+          </Button>
+        ) : null}
       </div>
     </div>
   );

@@ -6,8 +6,10 @@ import { cn } from "@/lib/utils";
 import { useMainStore } from "@/store/mainStore";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
-import { PlayIcon, ShoppingCartIcon } from "../modules/icons";
-import Link from "next/link";
+import { PlayIcon } from "../modules/icons";
+import Fuel from "./fuel/Fuel";
+import { useFuelStore } from "./fuel/fuelStore";
+import toast from "react-hot-toast";
 
 export default function StartPage() {
   const [isStarted, setIsStarted] = useState(false);
@@ -16,7 +18,16 @@ export default function StartPage() {
   const gameStatus = useMainStore((state) => state.gameStatus);
   const setGameStatus = useMainStore((state) => state.setGameStatus);
 
+  const fuel = useFuelStore((state) => state.fuel);
+  const setFuel = useFuelStore((state) => state.setFuel);
+
   const onStartGame = () => {
+    if (fuel < 20) {
+      return toast.error("Your fuel is not enough");
+    }
+
+    setFuel(fuel - 20);
+
     setIsStarted(true);
 
     const interval = setInterval(() => {
@@ -40,7 +51,7 @@ export default function StartPage() {
   return (
     <div
       className={cn(
-        "invisible fixed inset-0 z-10 h-dvh w-full bg-black/40 opacity-0 backdrop-blur-md",
+        "invisible fixed inset-0 z-10 h-full w-full bg-black/40 opacity-0 backdrop-blur-md",
         gameStatus === GameStatusEnum.NotStarted && "visible opacity-100",
       )}>
       {isStarted ? (

@@ -6,6 +6,7 @@ import { forwardRef } from "react";
 type TProps = {
   className?: string;
   carStyle: TCarStyle;
+  onAnimationEnd?: () => void;
 };
 
 export default forwardRef(function Car(

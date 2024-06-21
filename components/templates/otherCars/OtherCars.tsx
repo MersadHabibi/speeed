@@ -6,6 +6,7 @@ import { useMainStore } from "@/store/mainStore";
 import { useOtherCarsStore } from "./otherCarsStore";
 import useLoadOtherCars from "./useLoadOtherCars";
 import useSetOtherCarsInStore from "./useSetOtherCarsInStore";
+import Car from "@/components/modules/Car";
 
 export default function OtherCars() {
   const otherCars = useOtherCarsStore((state) => state.otherCars);
@@ -44,8 +45,10 @@ export default function OtherCars() {
                   event.currentTarget.style.animationDuration =
                     speed / 10 + car.speed + "s";
                 }}>
-                <div
-                  className={`other-car-${car.id} h-20 w-full rounded-md bg-black transition-all`}></div>
+                <Car
+                  carStyle={car.carStyle}
+                  className={`other-car-${car.id}`}
+                />
               </div>
             </div>
           );

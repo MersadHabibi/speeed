@@ -4,6 +4,7 @@ import { useMainStore } from "@/store/mainStore";
 import { TOtherCar } from "@/types";
 import { useEffect, useState } from "react";
 import { useOtherCarsStore } from "./otherCarsStore";
+import { carStyles } from "@/data/carStyles";
 
 export default function useLoadOtherCars() {
   const [prevRandomNumber, setPrevRandomNumber] = useState<number>();
@@ -16,8 +17,11 @@ export default function useLoadOtherCars() {
 
   useEffect(() => {
     const addCar = () => {
-      let rnd = rand(0, 2);
       let speedNumber = rand(1, 3);
+
+      // Get random line
+
+      let rnd = rand(0, 2);
 
       const randomNumber =
         prevRandomNumber === 0
@@ -29,6 +33,17 @@ export default function useLoadOtherCars() {
             : rand(0, 1);
 
       setPrevRandomNumber(randomNumber);
+
+      // Get random carStyle
+
+      const randomNumberForCarStyle = rand(1, carStyles.length);
+
+      console.log(
+        carStyles[randomNumberForCarStyle - 1],
+        carStyles[randomNumberForCarStyle - 1],
+        carStyles,
+        carStyles.length,
+      );
 
       setOtherCars([
         ...(otherCars as TOtherCar[]),
@@ -42,6 +57,7 @@ export default function useLoadOtherCars() {
                 ? "center"
                 : "right",
           speed: speedNumber,
+          carStyle: carStyles[randomNumberForCarStyle - 1],
         },
       ]);
     };

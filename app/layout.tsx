@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "h-dvh w-dvw overflow-hidden text-white",
+          "relative h-dvh w-screen overflow-hidden text-white",
           roboto.className,
         )}>
         {children}

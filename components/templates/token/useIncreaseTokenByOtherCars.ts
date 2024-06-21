@@ -26,7 +26,7 @@ const speedsToken = [
 ];
 
 export default function useIncreaseTokenByOtherCars() {
-  const [tokensWhenStart, setTokensWhenStart] = useState(0);
+  const [prevSumTokens, setPrevSumTokens] = useState(0);
 
   const tokens = useMainStore((state) => state.tokens);
   const setTokens = useMainStore((state) => state.setTokens);
@@ -38,18 +38,6 @@ export default function useIncreaseTokenByOtherCars() {
   const otherCars = useOtherCarsStore((state) => state.otherCars);
 
   useEffect(() => {
-    if (gameStatus === GameStatusEnum.Started && !tokensWhenStart) {
-      setTokensWhenStart(tokens);
-    }
-
-    if (gameStatus === GameStatusEnum.NotStarted && !tokensWhenStart) {
-      setTokensWhenStart(tokens);
-    }
-
-    if (gameStatus === GameStatusEnum.Accident) {
-      setTokensWhenStart(0);
-    }
-
     const tokensByCar = speedsToken.find((item) => item.speed < speed);
 
     let sumTokens = 0;
@@ -61,18 +49,17 @@ export default function useIncreaseTokenByOtherCars() {
         sumTokens += tokensByCar?.token! + playerCar.carStyle.bonus || 5;
     });
 
-    console.log(tokensWhenStart);
+    if (sumTokens > prevSumTokens) {
+      setTokens(tokens + (sumTokens - prevSumTokens));
+    }
 
-    if (!sumTokens) return;
-
-    setTokens(sumTokens + tokensWhenStart);
+    setPrevSumTokens(sumTokens);
   }, [
     otherCars,
-    setTokens,
-    tokens,
-    gameStatus,
-    tokensWhenStart,
-    speed,
     playerCar.carStyle.bonus,
+    speed,
+    tokens,
+    setTokens,
+    prevSumTokens,
   ]);
 }

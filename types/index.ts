@@ -33,4 +33,5 @@ export type TOtherCar = {
   position?: TPosition;
   line: TCarLine;
   speed: number;
+  carStyle: TCarStyle;
 };
