@@ -21,7 +21,15 @@ export default function RootLayout({
           roboto.className,
         )}>
         {children}
-        <Toaster />
+        <Toaster
+          toastOptions={{
+            style: {
+              borderRadius: "10px",
+              background: "#333",
+              color: "#fff",
+            },
+          }}
+        />
       </body>
     </html>
   );

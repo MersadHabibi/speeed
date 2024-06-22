@@ -1,14 +1,15 @@
 "use client";
 
+import Car from "@/components/modules/Car";
 import { GameStatusEnum } from "@/enums";
 import { cn } from "@/lib/utils";
 import { useMainStore } from "@/store/mainStore";
+import { memo } from "react";
 import { useOtherCarsStore } from "./otherCarsStore";
 import useLoadOtherCars from "./useLoadOtherCars";
 import useSetOtherCarsInStore from "./useSetOtherCarsInStore";
-import Car from "@/components/modules/Car";
 
-export default function OtherCars() {
+export default memo(function OtherCars() {
   const otherCars = useOtherCarsStore((state) => state.otherCars);
 
   const gameStatus = useMainStore((state) => state.gameStatus);
@@ -56,4 +57,4 @@ export default function OtherCars() {
       </div>
     </div>
   );
-}
+});

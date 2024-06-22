@@ -1,13 +1,14 @@
 "use client";
 
 import { CheckIcon, ShoppingCartIcon } from "@/components/modules/icons";
+import { addShoppingHistory } from "@/lib/utils";
+import { useMainStore } from "@/store/mainStore";
 import { TCarStyle } from "@/types";
 import Image from "next/image";
-import { memo, useEffect, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
+import toast from "react-hot-toast";
 import { usePlayerCarStore } from "../playerCar/playerCarStore";
 import { useCarStyleStore } from "./carStyleStore";
-import toast from "react-hot-toast";
-import { useMainStore } from "@/store/mainStore";
 
 export default memo(function CarStyleCard({
   carStyle,
@@ -20,15 +21,12 @@ export default memo(function CarStyleCard({
   const buyCarStyle = useCarStyleStore((state) => state.buyCarStyle);
 
   const playerCar = usePlayerCarStore((state) => state.playerCar);
-  const setPlayerCar = usePlayerCarStore((state) => state.setPlayerCar);
   const setPlayerCarStyle = usePlayerCarStore(
     (state) => state.setPlayerCarStyle,
   );
 
   const tokens = useMainStore((state) => state.tokens);
   const setTokens = useMainStore((state) => state.setTokens);
-
-  console.log("render");
 
   const isPurchased = useMemo(
     () =>
@@ -43,23 +41,25 @@ export default memo(function CarStyleCard({
     [carStyle.id, playerCar.carStyle.id],
   );
 
-  const onBuyCarStyle = () => {
+  const onBuyCarStyle = useCallback(() => {
     if (tokens > carStyle.price) {
       buyCarStyle(carStyle);
       setTokens(tokens - carStyle.price);
       toast("The car was bought.");
+
+      addShoppingHistory(carStyle);
     } else {
       toast.error("Your token is not enough.");
     }
-  };
+  }, [buyCarStyle, carStyle, tokens, setTokens]);
 
-  const onSelectCarStyle = () => {
+  const onSelectCarStyle = useCallback(() => {
     setPlayerCarStyle(carStyle);
     toast("The car is selected.");
-  };
+  }, [carStyle, setPlayerCarStyle]);
 
   return (
-    <div className="card">
+    <div className="card bg-neutral-900">
       <div className="mx-auto max-w-16">
         <Image
           src={carStyle.src}

@@ -5,13 +5,12 @@ import { GameStatusEnum } from "@/enums";
 import { cn } from "@/lib/utils";
 import { useMainStore } from "@/store/mainStore";
 import { Button } from "@nextui-org/button";
-import { useState } from "react";
-import { PlayIcon } from "../modules/icons";
-import Fuel from "./fuel/Fuel";
-import { useFuelStore } from "./fuel/fuelStore";
+import { memo, useCallback, useState } from "react";
 import toast from "react-hot-toast";
+import { PlayIcon } from "../modules/icons";
+import { useFuelStore } from "./fuel/fuelStore";
 
-export default function StartPage() {
+export default memo(function StartPage() {
   const [isStarted, setIsStarted] = useState(false);
   const [counter, setCounter] = useState(3);
 
@@ -21,7 +20,7 @@ export default function StartPage() {
   const fuel = useFuelStore((state) => state.fuel);
   const setFuel = useFuelStore((state) => state.setFuel);
 
-  const onStartGame = () => {
+  const onStartGame = useCallback(() => {
     if (fuel < 20) {
       return toast.error("Your fuel is not enough");
     }
@@ -34,17 +33,16 @@ export default function StartPage() {
       setCounter((prev) => {
         if (prev === 0) {
           setGameStatus(GameStatusEnum.Started);
-          setCounter(3);
           setIsStarted(false);
 
           clearInterval(interval);
-          return 0;
+          return 3;
         }
 
         return prev - 1;
       });
     }, 1000);
-  };
+  }, [setGameStatus, fuel, setFuel]);
 
   // on Restart Game
 
@@ -80,4 +78,4 @@ export default function StartPage() {
       )}
     </div>
   );
-}
+});

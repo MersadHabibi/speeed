@@ -4,11 +4,12 @@ import { GameStatusEnum } from "@/enums";
 import { cn } from "@/lib/utils";
 import { useMainStore } from "@/store/mainStore";
 import { Button } from "@nextui-org/button";
+import { memo, useCallback } from "react";
+import { RotateCWWIcon } from "../modules/icons";
 import { useOtherCarsStore } from "./otherCars/otherCarsStore";
 import { usePlayerCarStore } from "./playerCar/playerCarStore";
-import { RotateCWWIcon } from "../modules/icons";
 
-export default function AccidentPage() {
+export default memo(function AccidentPage() {
   const gameStatus = useMainStore((state) => state.gameStatus);
   const setGameStatus = useMainStore((state) => state.setGameStatus);
 
@@ -16,11 +17,11 @@ export default function AccidentPage() {
 
   const setOtherCars = useOtherCarsStore((state) => state.setOtherCars);
 
-  const onReStartGame = () => {
+  const onReStartGame = useCallback(() => {
     setGameStatus(GameStatusEnum.NotStarted);
     resetPlayerCar();
     setOtherCars([]);
-  };
+  }, [setGameStatus, setOtherCars, resetPlayerCar]);
 
   return (
     <div
@@ -40,4 +41,4 @@ export default function AccidentPage() {
       </div>
     </div>
   );
-}
+});

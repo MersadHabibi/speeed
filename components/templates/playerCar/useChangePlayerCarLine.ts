@@ -73,6 +73,7 @@ export default function useChangePlayerCarLine() {
       };
 
       const onTouchMove = (event: TouchEvent) => {
+        console.log(startTouchXPosition);
         let clientX = event.changedTouches[0].clientX;
         if (!startTouchXPosition) {
           return;

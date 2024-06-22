@@ -1,15 +1,15 @@
 "use client";
 
+import { ChevronLeftIcon, ShoppingCartIcon } from "@/components/modules/icons";
 import { GameStatusEnum } from "@/enums";
 import { cn } from "@/lib/utils";
 import { useMainStore } from "@/store/mainStore";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import useIncreaseTokenByOtherCars from "./useIncreaseTokenByOtherCars";
 import { Button } from "@nextui-org/button";
-import { ChevronLeftIcon, ShoppingCartIcon } from "@/components/modules/icons";
+import Image from "next/image";
+import { memo, useEffect, useState } from "react";
+import useIncreaseTokenByOtherCars from "./useIncreaseTokenByOtherCars";
 
-export default function Token() {
+export default memo(function Token() {
   const [prevGameStatus, setPrevGameStatus] = useState<GameStatusEnum>();
 
   const [prevTokens, setPrevTokens] = useState(0);
@@ -19,7 +19,6 @@ export default function Token() {
   const setGameStatus = useMainStore((state) => state.setGameStatus);
 
   const tokens = useMainStore((state) => state.tokens);
-  const setTokens = useMainStore((state) => state.setTokens);
   const getTokensFromLocalStorage = useMainStore(
     (state) => state.getTokensFromLocalStorage,
   );
@@ -34,7 +33,7 @@ export default function Token() {
 
   // Animation when increase token
   useEffect(() => {
-    if (prevTokens < tokens) {
+    if (prevTokens != tokens) {
       setHowManyIncreaseToken(tokens - prevTokens);
       setPrevTokens(tokens);
     }
@@ -101,4 +100,4 @@ export default function Token() {
       </div>
     </div>
   );
-}
+});

@@ -35,3 +35,10 @@ export type TOtherCar = {
   speed: number;
   carStyle: TCarStyle;
 };
+
+export type TFuelItem = {
+  id: number;
+  name: string;
+  amountOfFuel: number;
+  price: number;
+};

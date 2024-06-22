@@ -3,8 +3,9 @@
 import { GameStatusEnum } from "@/enums";
 import { cn } from "@/lib/utils";
 import { useMainStore } from "@/store/mainStore";
+import { memo } from "react";
 
-export default function StreetLines() {
+export default memo(function StreetLines() {
   const gameStatus = useMainStore((state) => state.gameStatus);
   const speed = useMainStore((state) => state.speed);
 
@@ -29,4 +30,4 @@ export default function StreetLines() {
       </div>
     </div>
   );
-}
+});

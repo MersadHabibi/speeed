@@ -2,13 +2,13 @@
 
 import Car from "@/components/modules/Car";
 import { cn } from "@/lib/utils";
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import { usePlayerCarStore } from "./playerCarStore";
 import useAccident from "./useAccident";
 import useChangePlayerCarLine from "./useChangePlayerCarLine";
 import useMovePlayerCarYPosition from "./useMovePlayerCarYPosition";
 
-export default function PlayerCar() {
+export default memo(function PlayerCar() {
   const playerCarRef = useRef(null);
 
   const playerCar = usePlayerCarStore((state) => state.playerCar);
@@ -44,4 +44,4 @@ export default function PlayerCar() {
       </div>
     </div>
   );
-}
+});
