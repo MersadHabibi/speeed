@@ -23,6 +23,7 @@ export default forwardRef(function Car(
         height={100}
         alt={props.carStyle.name}
         className="size-full object-contain"
+        priority={true}
       />
     </div>
   );
