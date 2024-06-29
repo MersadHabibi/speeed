@@ -2,7 +2,11 @@
 
 import { GameStatusEnum } from "@/enums";
 import { cn } from "@/lib/utils";
-import { useMainStore } from "@/store/mainStore";
+import {
+  DEFAULT_SPEED,
+  DEFAULT_TRAFFIC,
+  useMainStore,
+} from "@/store/mainStore";
 import { Button } from "@nextui-org/button";
 import { memo, useCallback } from "react";
 import { RotateCWWIcon } from "../modules/icons";
@@ -17,11 +21,16 @@ export default memo(function AccidentPage() {
 
   const setOtherCars = useOtherCarsStore((state) => state.setOtherCars);
 
+  const setSpeed = useMainStore((state) => state.setSpeed);
+  const setTraffic = useMainStore((state) => state.setTraffic);
+
   const onReStartGame = useCallback(() => {
     setGameStatus(GameStatusEnum.NotStarted);
     resetPlayerCar();
     setOtherCars([]);
-  }, [setGameStatus, setOtherCars, resetPlayerCar]);
+    setSpeed(DEFAULT_SPEED);
+    setTraffic(DEFAULT_TRAFFIC);
+  }, [setGameStatus, setOtherCars, resetPlayerCar, setSpeed, setTraffic]);
 
   return (
     <div

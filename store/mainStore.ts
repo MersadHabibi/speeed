@@ -3,6 +3,9 @@
 import { GameStatusEnum } from "@/enums";
 import { create } from "zustand";
 
+export const DEFAULT_SPEED = 30;
+export const DEFAULT_TRAFFIC = 200;
+
 export type State = {
   gameStatus: GameStatusEnum;
   speed: number;
@@ -24,9 +27,9 @@ export type Actions = {
 
 export const useMainStore = create<State & Actions>()((set) => ({
   gameStatus: GameStatusEnum.NotStarted,
-  speed: 30, // less number == high speed
+  speed: DEFAULT_SPEED, // less number == high speed
   maxSpeed: 10,
-  traffic: 2000, // less number == more traffic
+  traffic: DEFAULT_TRAFFIC, // less number == more traffic
   maxTraffic: 1000,
   tokens: 0,
   setGameStatus(gameStatus) {
