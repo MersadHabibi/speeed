@@ -4,7 +4,7 @@ import { GameStatusEnum } from "@/enums";
 import { create } from "zustand";
 
 export const DEFAULT_SPEED = 30;
-export const DEFAULT_TRAFFIC = 200;
+export const DEFAULT_TRAFFIC = 2000;
 
 export type State = {
   gameStatus: GameStatusEnum;
